@@ -1,24 +1,71 @@
 import { useEffect, useState } from "react";
+import {
+  connectWallet,
+  getCurrentWalletConnected,
+  mintNFT,
+} from "./utils/interact";
 
 const Minter = (props) => {
-
   //State variables
   const [walletAddress, setWallet] = useState("");
   const [status, setStatus] = useState("");
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [url, setURL] = useState("");
- 
-  useEffect(async () => { //TODO: implement
-    
-  }, []);
 
-  const connectWalletPressed = async () => { //TODO: implement
-   
+  const addWalletListener = async () => {
+    if (window.ethereum) {
+      window.ethereum.on("accountsChanged", (accounts) => {
+        if (accounts.length > 0) {
+          setWallet(accounts[0]);
+          setStatus("👆🏽 Write a message in the text-field above.");
+        } else {
+          setWallet("");
+          setStatus("🦊 Connect to Metamask using the top right button.");
+        }
+      });
+    } else {
+      return {
+        address: "",
+        status: (
+          <span>
+            <p>
+              {" "}
+              🦊{" "}
+              <a
+                target="_blank"
+                href={`https://metamask.io/download.html`}
+                rel="noreferrer"
+              >
+                You must install Metamask, a virtual Ethereum wallet, in your
+                browser.
+              </a>
+            </p>
+          </span>
+        ),
+      };
+    }
   };
 
-  const onMintPressed = async () => { //TODO: implement
-    
+  useEffect(() => {
+    let getCurrentWallet = async () => {
+      const walletResponse = await getCurrentWalletConnected();
+      setStatus(walletResponse.status);
+      setWallet(walletResponse.address);
+    };
+    getCurrentWallet();
+    addWalletListener();
+  }, []);
+
+  const connectWalletPressed = async () => {
+    const walletResponse = await connectWallet();
+    setStatus(walletAddress.status);
+    setWallet(walletResponse.address);
+  };
+
+  const onMintPressed = async () => {
+    const { status } = await mintNFT(url, name, description);
+    setStatus(status);
   };
 
   return (
@@ -62,9 +109,7 @@ const Minter = (props) => {
       <button id="mintButton" onClick={onMintPressed}>
         Mint NFT
       </button>
-      <p id="status">
-        {status}
-      </p>
+      <p id="status">{status}</p>
     </div>
   );
 };
