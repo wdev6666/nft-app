@@ -52,11 +52,17 @@ export const getCurrentWalletConnected = async () => {
       const addressArray = await window.ethereum.request({
         method: "eth_accounts",
       });
-      const returnObj = {
-        status: "👆🏽 Write a message in the text-field above.",
-        address: addressArray[0],
+      if (addressArray.length > 0) {
+        const returnObj = {
+          status: "👆🏽 Write a message in the text-field above.",
+          address: addressArray[0],
+        };
+        return returnObj;
+      }
+      return {
+        address: "",
+        status: "Connect wallet!",
       };
-      return returnObj;
     } catch (error) {
       return {
         address: "",
@@ -100,6 +106,7 @@ export const mintNFT = async (url, name, description) => {
 
   // Pinata call
   const pinataResponse = await pinJSONToIPFS(metadata);
+  console.log(pinataResponse);
   if (!pinataResponse.success) {
     return {
       success: false,

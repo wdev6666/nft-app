@@ -9,7 +9,7 @@ export const pinJSONToIPFS = async (JSONBody) => {
     .post(url, JSONBody, {
       headers: {
         pinata_api_key: key,
-        pinata_secrect_api_key: secret,
+        pinata_secret_api_key: secret,
       },
     })
     .then((response) => {
