@@ -4,7 +4,8 @@ require("dotenv").config();
 const alchemyKey = process.env.REACT_APP_ALCHEMY_KEY;
 const web3 = createAlchemyWeb3(alchemyKey);
 const contractABI = require("../contract-abi.json");
-const contractAddress = "0x99169669472a98e8956E7EC0B7a12b7481Bb9465";
+//const contractAddress = "0x99169669472a98e8956E7EC0B7a12b7481Bb9465";
+const contractAddress = "0x7A252380aD5866Ff757Aa710af0f4C7B1E8ddf24";
 
 export const connectWallet = async () => {
   if (window.ethereum) {
@@ -106,7 +107,7 @@ export const mintNFT = async (url, name, description) => {
 
   // Pinata call
   const pinataResponse = await pinJSONToIPFS(metadata);
-  console.log(pinataResponse);
+  //console.log(pinataResponse);
   if (!pinataResponse.success) {
     return {
       success: false,
